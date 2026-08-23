@@ -8,7 +8,7 @@ namespace Module
         {
             // Header
             var appVersion = Assembly.GetExecutingAssembly().GetName().Version;
-            var Title = $"Roblox API Shell Tool - v{appVersion!}";
+            var Title = $"Roblox API Shell Tool - v{appVersion!.ToString(3)}";
             var Url = "(https://faizda.my.id/)";
             var Logo = @"
 .MMMMMMMMMMMMMMMMMM 
@@ -24,7 +24,6 @@ MMMX   KMMMMMMMMMMN
 MMM   .MMMMMMMMMMMMM";
             var HeaderOrder = new []
             {
-                withLogo ? "\n" : null,
                 Title,
                 Url,
                 withLogo ? $"{Logo}\n\n" : null

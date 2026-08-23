@@ -10,11 +10,13 @@ public class MainCli
         // If no args
         if(Args.Length < 1)
         {
-            Args = new[]
+            Args = new string[]
             {
                 "--help"
             };
         }
+
+        // display logo if its on help args
         if(Args.Contains("--help"))
         {
             Console.WriteLine(CliHeader.MainHead());
@@ -22,6 +24,8 @@ public class MainCli
 
         // root command
         var RootCmd = new RootCommand(CliHeader.MainHead(false));
+
+        // add subcommand
         RootCmd.Add(new BundleCommand().Spawn(Args));
 
         // execute task parse on root cmd
