@@ -1,5 +1,7 @@
 ﻿using System.CommandLine;
 using System.Reflection;
+using Commands;
+using Module;
 
 public class MainCli
 {
@@ -13,22 +15,15 @@ public class MainCli
                 "--help"
             };
         }
-
-        // Options
-        var ApiKeyOption = new Option<string>("--apiKey");
+        if(Args.Contains("--help"))
+        {
+            Console.WriteLine(CliHeader.MainHead());
+        }
 
         // root command
-        var appVersion = Assembly.GetExecutingAssembly().GetName().Version;
-        var RootCmd = new RootCommand($@"Roblox Asset Downloader (by Faizdzn) - v{appVersion!.ToString(3)}")
-        {
-            ApiKeyOption
-        };
-        RootCmd.SetAction(act =>
-        {
-            var apiKey = act.GetValue(ApiKeyOption);
-            Console.WriteLine(apiKey);
-        });
-        
+        var RootCmd = new RootCommand(CliHeader.MainHead(false));
+        RootCmd.Add(new BundleCommand().Spawn(Args));
+
         // execute task parse on root cmd
         return await RootCmd.Parse(Args).InvokeAsync();
     }
