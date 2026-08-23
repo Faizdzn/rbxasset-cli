@@ -1,5 +1,5 @@
 using System.CommandLine;
-using Module;
+using Actions;
 
 namespace Commands
 {
@@ -8,12 +8,12 @@ namespace Commands
         public override Command Spawn(string[] Args)
         {
             // Description
-            var Description = "Download Roblox Bundle by ID" ?? DefaultDescription;
+            var Description = "Download roblox bundle on your shell" ?? DefaultDescription;
 
             // Option
             var BundleIdOption = new Option<int>("--bundle-id")
             {
-               Description = "Bundle ID" 
+               Description = "Bundle ID"
             };
 
             // Cmd
@@ -24,6 +24,13 @@ namespace Commands
             };
 
             // Action
+            Cmd.SetAction(async(act) =>
+            {
+                var ApiKey = act.GetValue(ApiKeyOption);
+                var BundleId = act.GetValue(BundleIdOption);
+
+                await BundleAction.Run(ApiKey ?? "", BundleId);
+            });
 
             return Cmd;
         }

@@ -1,7 +1,7 @@
 ﻿using System.CommandLine;
 using System.Reflection;
 using Commands;
-using Module;
+using Modules;
 
 public class MainCli
 {
@@ -27,6 +27,7 @@ public class MainCli
 
         // add subcommand
         RootCmd.Add(new BundleCommand().Spawn(Args));
+        RootCmd.Add(new CharacterCommand().Spawn(Args));
 
         // execute task parse on root cmd
         return await RootCmd.Parse(Args).InvokeAsync();

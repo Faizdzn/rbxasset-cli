@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
 using System.Text;
 
-namespace Module.Parser
+namespace Modules.Parser
 {
     public sealed class ByteReader
     {

@@ -4,7 +4,7 @@ namespace Commands
 {
     public abstract class CommandBase {
         public string DefaultDescription {get; set;} = "This is default description of command!";
-        public Option ApiKeyOption {get;} = new Option<string>("--apiKey")
+        public Option<string> ApiKeyOption {get;} = new Option<string>("--apiKey")
         {
             Description = "Your Roblox API Key",
             Required = true

@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace Module
+namespace Modules
 {
     public static class CliHeader
     {

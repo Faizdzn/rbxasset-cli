@@ -1,4 +1,4 @@
-namespace Module.Parser
+namespace Modules.Parser
 {
     public static class DracoBitstream
     {
