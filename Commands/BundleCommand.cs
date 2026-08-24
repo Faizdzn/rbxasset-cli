@@ -26,10 +26,16 @@ namespace Commands
             // Action
             Cmd.SetAction(async(act) =>
             {
-                var ApiKey = act.GetValue(ApiKeyOption);
-                var BundleId = act.GetValue(BundleIdOption);
+                try
+                {
+                    var ApiKey = act.GetValue(ApiKeyOption);
+                    var BundleId = act.GetValue(BundleIdOption);
 
-                await BundleAction.Run(ApiKey ?? "", BundleId);
+                    await BundleAction.Run(await ParseKey(ApiKey ?? ""), BundleId);
+                } catch(Exception e)
+                {
+                    Console.Error.WriteLine(e.Message);
+                }
             });
 
             return Cmd;

@@ -29,7 +29,7 @@ namespace Commands
                 var ApiKey = act.GetValue(ApiKeyOption);
                 var UniverseId = act.GetValue(UniverseIdOption);
 
-                await GameAction.Run(ApiKey ?? "", UniverseId);
+                await GameAction.Run(await ParseKey(ApiKey ?? ""), UniverseId);
             });
 
             return Cmd;

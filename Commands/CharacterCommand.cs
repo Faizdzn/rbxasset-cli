@@ -15,7 +15,7 @@ namespace Commands
             {
                Description = "User ID"
             };
-            var UsernameOption = new Option<string>("--user-id")
+            var UsernameOption = new Option<string>("--username")
             {
                Description = "Username"
             };
@@ -31,11 +31,17 @@ namespace Commands
             // Action
             Cmd.SetAction(async(act) =>
             {
-                var ApiKey = act.GetValue(ApiKeyOption);
-                var UserId = act.GetValue(UserIdOption);
-                var Username = act.GetValue(UsernameOption);
+                try
+                {
+                    var ApiKey = act.GetValue(ApiKeyOption);
+                    var UserId = act.GetValue(UserIdOption);
+                    var Username = act.GetValue(UsernameOption);
 
-                await CharacterAction.Run(ApiKey ?? "", UserId, Username!);
+                    await CharacterAction.Run(await ParseKey(ApiKey ?? ""), UserId, Username!);                    
+                } catch(Exception e)
+                {
+                    Console.Error.WriteLine(e.Message);
+                }
             });
 
             return Cmd;
