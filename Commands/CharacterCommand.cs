@@ -35,7 +35,7 @@ namespace Commands
                 var UserId = act.GetValue(UserIdOption);
                 var Username = act.GetValue(UsernameOption);
 
-                await CharacterAction.Run(ApiKey ?? "", UserId, Username);
+                await CharacterAction.Run(ApiKey ?? "", UserId, Username!);
             });
 
             return Cmd;
