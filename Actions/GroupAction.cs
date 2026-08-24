@@ -1,4 +1,5 @@
 using Commands;
+using Modules.Roblox;
 
 namespace Actions
 {
@@ -6,7 +7,10 @@ namespace Actions
     {
         public static async Task Run(CommandBase.IKey ApiKey, int GroupId)
         {
-            Console.WriteLine($"{ApiKey} {GroupId}");
+            var RbxAssetApi = new RobloxAssetApi(ApiKey);
+            var Data = await RbxAssetApi.GetGroupDetail(GroupId);
+            
+            Console.WriteLine(Data);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using Commands;
 
 namespace Modules.Roblox
@@ -5,17 +6,37 @@ namespace Modules.Roblox
     public class RobloxAssetApi : RobloxMainApi
     {
         public RobloxAssetApi(CommandBase.IKey Key) : base(Key) {}
-        
+
         // group
-        public async Task getGroupDetail(int GroupId)
+        public async Task<object> GetGroupDetail(int GroupId)
         {
+            var Api = $"https://groups.roblox.com/v1/groups/{GroupId}";
+
+            var Resp = await Http.GetAsync(Api);
+            var JsonData = await Resp.Content.ReadFromJsonAsync<object>();
+
+            if(Resp.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception("Group not found!");
+            } 
             
+            return JsonData!;
         }
-        public async Task getGroupGames(int GroupId)
+        public async Task<object> GetGroupGames(int GroupId)
         {
+            var Api = $"https://games.roblox.com/v2/groups/${GroupId}/games?accessFilter=Public&cursor=&limit=50&sortOrder=Desc";
+
+            var Resp = await Http.GetAsync(Api);
+            var JsonData = await Resp.Content.ReadFromJsonAsync<object>();
+
+            if(Resp.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception("Game not found!");
+            }
             
+            return JsonData!;
         }
-        public async Task getGroupIcon(int GroupId)
+        public async Task GetGroupIcon(int GroupId)
         {
             
         }
