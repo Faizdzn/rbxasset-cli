@@ -6,7 +6,7 @@ namespace Commands
         public string DefaultDescription {get; set;} = "This is default description of command!";
         public Option<string> ApiKeyOption {get;} = new Option<string>("--key")
         {
-            Description = "Your Roblox API Key or Auth Key",
+            Description = "Your Roblox API Key or Auth Key (e.g. XXXXX::<auth/api>)",
             Required = true
         };
 
