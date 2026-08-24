@@ -9,7 +9,7 @@ namespace Modules
             // Header
             var appVersion = Assembly.GetExecutingAssembly().GetName().Version;
             var Title = $"Roblox API Shell Tool - v{appVersion!.ToString(3)}";
-            var Url = "(https://faizda.my.id/)";
+            var Url = "(https://adhi.ski/git/rbxasset-cli)";
             var Logo = @"
 .MMMMMMMMMMMMMMMMMM 
 MMMMMMMMMMMMMMMMMMx 

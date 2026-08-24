@@ -10,7 +10,7 @@ namespace Commands
             Required = true
         };
 
-        // util
+        // key util
         public enum KeyTypeEnum
         {
             API_KEY,
