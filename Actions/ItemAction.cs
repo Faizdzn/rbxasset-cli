@@ -8,7 +8,7 @@ namespace Actions
         public static async Task Run(CommandBase.IKey ApiKey, int ItemId)
         {
             var AssetApi = new RobloxAssetApi(ApiKey);
-            // Console.WriteLine(await AssetApi.ZipItemObjToBuffer(ItemId));
+            Console.WriteLine(await AssetApi.ZipItemObjToBuffer(ItemId));
         }
     }
 }
