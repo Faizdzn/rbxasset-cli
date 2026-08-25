@@ -1,4 +1,5 @@
 using Commands;
+using Modules.Roblox;
 
 namespace Actions
 {
@@ -6,7 +7,8 @@ namespace Actions
     {
         public static async Task Run(CommandBase.IKey ApiKey, int BundleId)
         {
-            Console.WriteLine($"{ApiKey} {BundleId}");
+            var AssetApi = new RobloxAssetApi(ApiKey);
+            // Console.WriteLine(await AssetApi.ZipBundleObjToBuffer(BundleId));
         }
     }
 }

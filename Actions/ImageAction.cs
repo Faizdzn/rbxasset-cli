@@ -1,4 +1,5 @@
 using Commands;
+using Modules.Roblox;
 
 namespace Actions
 {
@@ -6,7 +7,8 @@ namespace Actions
     {
         public static async Task Run(CommandBase.IKey ApiKey, int ImageId)
         {
-            Console.WriteLine($"{ApiKey} {ImageId}");
+            var ModelApi = new RobloxModelApi(ApiKey);
+            // Console.WriteLine(await ModelApi.GetImageFile(ImageId));
         }
     }
 }

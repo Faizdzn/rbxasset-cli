@@ -28,14 +28,11 @@ public class MainCli
         // add subcommand
         RootCmd.Add(new BundleCommand().Spawn(Args));
         RootCmd.Add(new CharacterCommand().Spawn(Args));
-        RootCmd.Add(new GameCommand().Spawn(Args));
-        RootCmd.Add(new GroupCommand().Spawn(Args));
         RootCmd.Add(new ImageCommand().Spawn(Args));
         RootCmd.Add(new ItemCommand().Spawn(Args));
         RootCmd.Add(new MeshCommand().Spawn(Args));
         RootCmd.Add(new ModelCommand().Spawn(Args));
         RootCmd.Add(new RbxAssetCommand().Spawn(Args));
-        RootCmd.Add(new UserCommand().Spawn(Args));
 
         // execute task parse on root cmd
         return await RootCmd.Parse(Args).InvokeAsync();

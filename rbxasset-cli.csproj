@@ -10,7 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JSZip" Version="3.10.1" />
     <PackageReference Include="System.Commandline" Version="2.0.11" />
   </ItemGroup>
 

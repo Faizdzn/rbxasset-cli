@@ -8,19 +8,19 @@ namespace Commands
         public override Command Spawn(string[] Args)
         {
             // Description
-            var Description = "Get roblox assetid detail on your shell" ?? DefaultDescription;
+            var Description = "Parse roblox assetid on your shell" ?? DefaultDescription;
 
             // Option
-            var RbxAssetIdOption = new Option<int>("--asset-id")
+            var RbxAssetUrlOption = new Option<string>("--asset-url")
             {
-               Description = "Asset ID"
+               Description = "RbxAsset Url (e.g. rbxassetid://xxxxx)"
             };
 
             // Cmd
             var Cmd = new Command("RbxAsset", Description)
             {
                 ApiKeyOption,
-                RbxAssetIdOption
+                RbxAssetUrlOption
             };
 
             // Action
@@ -29,9 +29,9 @@ namespace Commands
                 try
                 {
                     var ApiKey = act.GetValue(ApiKeyOption);
-                    var RbxAssetId = act.GetValue(RbxAssetIdOption);
+                    var RbxAssetUrl = act.GetValue(RbxAssetUrlOption);
 
-                    await RbxAssetAction.Run(await ParseKey(ApiKey ?? ""), RbxAssetId);
+                    await RbxAssetAction.Run(await ParseKey(ApiKey ?? ""), RbxAssetUrl ?? "");
                 } catch(Exception e)
                 {
                     Console.Error.WriteLine(e.Message);
