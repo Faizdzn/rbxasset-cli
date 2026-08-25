@@ -100,7 +100,7 @@ namespace Modules.Roblox
             var TexUrls = ObjJsonData!["textures"]!.AsArray().ToList().Select(sel => GetHashUrl(sel!.GetValue<string>()));
             var TexArr = new TexStruct
             {
-                Hash = ObjJsonData["textures"]!.AsArray().Select(sel => sel.GetValue<string>()).ToArray(),
+                Hash = ObjJsonData["textures"]!.AsArray().Select(sel => sel!.GetValue<string>()).ToArray(),
                 Url = TexUrls.ToArray()
             };
             
