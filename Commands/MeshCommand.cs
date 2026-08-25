@@ -11,7 +11,7 @@ namespace Commands
             var Description = "Download roblox mesh on your shell" ?? DefaultDescription;
 
             // Option
-            var MeshIdOption = new Option<int>("--mesh-id")
+            var MeshIdOption = new Option<long>("--mesh-id")
             {
                Description = "Mesh ID"
             };

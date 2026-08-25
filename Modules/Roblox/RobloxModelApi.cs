@@ -6,7 +6,7 @@ namespace Modules.Roblox {
         public RobloxModelApi(CommandBase.IKey Key) : base(Key) {}
         
         // api section
-        public async Task RequestAssetApi(int AssetId)
+        public async Task RequestAssetApi(long AssetId)
         {
             
         }
@@ -27,11 +27,11 @@ namespace Modules.Roblox {
         {
             
         }
-        public async Task GetMeshFile(int MeshId)
+        public async Task GetMeshFile(long MeshId)
         {
             
         }
-        public async Task GetImageFile(int ImageId)
+        public async Task GetImageFile(long ImageId)
         {
             
         }

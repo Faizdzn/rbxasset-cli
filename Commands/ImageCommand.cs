@@ -11,7 +11,7 @@ namespace Commands
             var Description = "Download roblox image on your shell" ?? DefaultDescription;
 
             // Option
-            var ImageIdOption = new Option<int>("--image-id")
+            var ImageIdOption = new Option<long>("--image-id")
             {
                Description = "Image ID"
             };

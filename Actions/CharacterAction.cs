@@ -5,7 +5,7 @@ namespace Actions
 {
     public static class CharacterAction
     {
-        public static async Task Run(CommandBase.IKey ApiKey, int UserId, string Username = "")
+        public static async Task Run(CommandBase.IKey ApiKey, long UserId, string Username = "")
         {
             var AssetApi = new RobloxAssetApi(ApiKey);
             if(UserId > 0)

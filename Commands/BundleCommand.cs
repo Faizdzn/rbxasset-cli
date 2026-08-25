@@ -11,7 +11,7 @@ namespace Commands
             var Description = "Download roblox bundle on your shell" ?? DefaultDescription;
 
             // Option
-            var BundleIdOption = new Option<int>("--bundle-id")
+            var BundleIdOption = new Option<long>("--bundle-id")
             {
                Description = "Bundle ID"
             };

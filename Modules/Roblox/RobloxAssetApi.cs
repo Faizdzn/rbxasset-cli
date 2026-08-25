@@ -31,7 +31,7 @@ namespace Modules.Roblox
         }
 
         // user
-        public async Task<int> GetUIDbyUsername(string Username)
+        public async Task<long> GetUIDbyUsername(string Username)
         {
             var Api = "https://users.roblox.com/v1/usernames/users";
             var Payload = new
@@ -52,9 +52,9 @@ namespace Modules.Roblox
                 throw new Exception("User not found!");
             }
 
-            return JsonData["data"]![0]!["id"]!.GetValue<int>();
+            return JsonData["data"]![0]!["id"]!.GetValue<long>();
         }
-        public async Task<JsonObject> UidDetail(int UserId)
+        public async Task<JsonObject> UidDetail(long UserId)
         {
             var Api = $"https://users.roblox.com/v1/users/{UserId}";
 
@@ -66,7 +66,7 @@ namespace Modules.Roblox
 
             return JsonData!;
         }
-        public async Task<string> GetUserShot(int UserId)
+        public async Task<string> GetUserShot(long UserId)
         {
             var Api = "https://thumbnails.roblox.com/v1/batch";
             var BodyBatch = new[]
@@ -87,7 +87,7 @@ namespace Modules.Roblox
 
             return JsonData!["data"]![0]!["imageUrl"]!.GetValue<string>();
         }
-        public async Task<MeshData> GetUserObj(int UserId)
+        public async Task<MeshData> GetUserObj(long UserId)
         {
             var Api = $"https://thumbnails.roblox.com/v1/users/avatar-3d?userId={UserId}";
 
@@ -115,7 +115,7 @@ namespace Modules.Roblox
 
             return ModelResp;
         }
-        public async Task<string> GetUserIdAvatarType(int UserId)
+        public async Task<string> GetUserIdAvatarType(long UserId)
         {
             var Api = $"https://avatar.roblox.com/v1/users/{UserId}/avatar";
 
@@ -184,7 +184,7 @@ namespace Modules.Roblox
             var ZipBase64 = Convert.ToBase64String(ZipMemory.ToArray());
             return $"data:application/zip;base64,{ZipBase64}";
         }
-        public async Task<string> ZipUserIdObjToBuffer(int UserId)
+        public async Task<string> ZipUserIdObjToBuffer(long UserId)
         {
             var ZipMemory = new MemoryStream();
             using (var Zip = new ZipArchive(ZipMemory, ZipArchiveMode.Create))
@@ -245,7 +245,7 @@ namespace Modules.Roblox
         }
 
         // item
-        public async Task<JsonObject> ItemDetail(int ItemId)
+        public async Task<JsonObject> ItemDetail(long ItemId)
         {
             var Api = $"https://catalog.roblox.com/v1/catalog/items/{ItemId}/details?itemType=Asset";
 
@@ -254,7 +254,7 @@ namespace Modules.Roblox
 
             return JsonData!;
         }
-        public async Task<MeshData> GetItemObj(int ItemId)
+        public async Task<MeshData> GetItemObj(long ItemId)
         {
             // Batch
             var BatchApi = $"https://thumbnails.roblox.com/v1/assets-thumbnail-3d?assetId={ItemId}";
@@ -287,7 +287,7 @@ namespace Modules.Roblox
 
             return ModelResp;
         }
-        public async Task<string> ZipItemObjToBuffer(int ItemId)
+        public async Task<string> ZipItemObjToBuffer(long ItemId)
         {
             var ZipMemory = new MemoryStream();
             using (var Zip = new ZipArchive(ZipMemory, ZipArchiveMode.Create))
@@ -341,6 +341,17 @@ namespace Modules.Roblox
                 {
                     ZipMtlStream.Write(MtlData);
                 }
+
+                // pos.txt
+                if(ItemObj.Pos != null)
+                {
+                    var ZipEntryPosTxt = Zip.CreateEntry("pos.txt");
+                    using (var ZipPosTxtStream = new StreamWriter(ZipEntryPosTxt.Open()))
+                    {
+                        var Pos = ItemObj.Pos.GetType().GetProperties().ToDictionary(dict => dict.Name, dict => dict.GetValue(ItemObj.Pos));
+                        ZipPosTxtStream.Write(string.Join("\n", Pos.Select(sel => sel.Value)));
+                    }
+                }
             }
 
             var ZipBase64 = Convert.ToBase64String(ZipMemory.ToArray());
@@ -348,34 +359,35 @@ namespace Modules.Roblox
         }
 
         // bundle
-        public async Task<JsonObject> BundleDetail(int BundleId)
+        public async Task<JsonObject> BundleDetail(long BundleId)
         {
             var Api = $"https://catalog.roblox.com/v1/bundles/details?bundleIds[]={BundleId}";
             
             var Resp = await Http.GetAsync(Api);
-            var JsonData = await Resp.Content.ReadFromJsonAsync<JsonObject>();
+            var JsonData = await Resp.Content.ReadFromJsonAsync<JsonArray>();
+            if(JsonData!.Count() < 1)
+            {
+                throw new Exception("Bundle not found!");
+            }
 
-            return JsonData!;
+            return JsonData![0]!.AsObject();
         }
-        public async Task<int> BundleOutfitId(int BundleId)
+        public async Task<long> BundleOutfitId(long BundleId)
         {
             var BundleData = await BundleDetail(BundleId);
 
-            var OutfitId = 0;
-            if(BundleData!.AsArray().Count() < 1)
-            {
-                var Items = BundleData[0]!["items"]!.AsArray();
-                foreach (var item in Items) {
-                    if(item!["type"]!.GetValue<string>() == "UserOutfit" && OutfitId > 0) {}
-                    {
-                        OutfitId = item["id"]!.GetValue<int>();
-                    }
+            long OutfitId = 0;
+            var Items = BundleData["items"]!.AsArray();
+            foreach (var item in Items) {
+                if(item!["type"]!.GetValue<string>() == "UserOutfit" && OutfitId > 0) {}
+                {
+                    OutfitId = item["id"]!.GetValue<long>();
                 }
             }
 
             return OutfitId;
         }
-        public async Task<MeshData> GetBundleObj(int OutfitId)
+        public async Task<MeshData> GetBundleObj(long OutfitId)
         {
             // Batch
             var BatchApi = $"https://thumbnails.roblox.com/v1/users/outfit-3d?outfitId={OutfitId}";
@@ -408,16 +420,16 @@ namespace Modules.Roblox
 
             return ModelResp;
         }
-        public async Task<string> ZipBundleObjToBuffer(int BundleId)
+        public async Task<string> ZipBundleObjToBuffer(long BundleId)
         {
             var ZipMemory = new MemoryStream();
             using (var Zip = new ZipArchive(ZipMemory, ZipArchiveMode.Create))
             {
                 // get detail
-                var BundleData = await BundleDetail(BundleId);
+                var OutfitId = await BundleOutfitId(BundleId);
 
                 // get bundle obj
-                var BundleObj = await GetBundleObj(BundleId);
+                var BundleObj = await GetBundleObj(OutfitId);
 
                 // Mesh Data
                 var ObjResp = await Http.GetAsync(BundleObj.Obj);
@@ -461,6 +473,17 @@ namespace Modules.Roblox
                 using (var ZipMtlStream = new StreamWriter(ZipEntryMtl.Open()))
                 {
                     ZipMtlStream.Write(MtlData);
+                }
+
+                // pos.txt
+                if(BundleObj.Pos != null)
+                {
+                    var ZipEntryPosTxt = Zip.CreateEntry("pos.txt");
+                    using (var ZipPosTxtStream = new StreamWriter(ZipEntryPosTxt.Open()))
+                    {
+                        var Pos = BundleObj.Pos.GetType().GetProperties().ToDictionary(dict => dict.Name, dict => dict.GetValue(BundleObj.Pos));
+                        ZipPosTxtStream.Write(string.Join("\n", Pos.Select(sel => sel.Value)));
+                    }
                 }
             }
 

@@ -11,7 +11,7 @@ namespace Commands
             var Description = "Download roblox character on your shell" ?? DefaultDescription;
 
             // Option
-            var UserIdOption = new Option<int>("--user-id")
+            var UserIdOption = new Option<long>("--user-id")
             {
                Description = "User ID"
             };

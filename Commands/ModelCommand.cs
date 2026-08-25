@@ -11,7 +11,7 @@ namespace Commands
             var Description = "Download roblox model on your shell" ?? DefaultDescription;
 
             // Option
-            var ModelIdOption = new Option<int>("--model-id")
+            var ModelIdOption = new Option<long>("--model-id")
             {
                Description = "Model ID"
             };
