@@ -4,3 +4,7 @@ obj
 
 # env
 .env
+
+# test js & html
+*.html
+*.js
