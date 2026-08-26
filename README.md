@@ -44,5 +44,5 @@ Made with [contrib.rocks](https://contrib.rocks).
 
 ## Donate Us
 If RbxAssetCli is useful to you, consider supporting its development! Your support helps us maintain the project, improve existing features, fix bugs, and continue building useful open-source tools for the community. Every contribution, whether it's a sponsorship, donation, or simply sharing the project, is greatly appreciated.
-<!-- 15749420 -->
+
 [![Patreon](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fwww.patreon.com%2Fapi%2Fcampaigns%2F15749420&query=data.attributes.patron_count&suffix=%20Patrons&color=FF5441&label=Patreon&logo=Patreon&logoColor=FF5441&style=for-the-badge)](https://patreon.com/<Username>)
