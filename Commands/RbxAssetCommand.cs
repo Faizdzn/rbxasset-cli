@@ -17,7 +17,7 @@ namespace Commands
             };
 
             // Cmd
-            var Cmd = new Command("RbxAsset", Description)
+            var Cmd = new Command("rbx-asset", Description)
             {
                 ApiKeyOption,
                 RbxAssetUrlOption
