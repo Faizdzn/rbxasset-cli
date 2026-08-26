@@ -4,7 +4,7 @@ RbxAsset CLI is an open-source command-line tool for downloading and working wit
 ## Example Usage
 - Help:
 ```sh
-rbxasset-cli help
+rbxasset-cli --help
 ```
 - Getting Character by Username (Base64 -> `data:application/zip;base64,<data>`):
 ```sh
