@@ -6,35 +6,35 @@ RbxAsset CLI is an open-source command-line tool for downloading and working wit
 ```sh
 rbxasset-cli help
 ```
-- Getting Character by Username:
+- Getting Character by Username (Base64 -> `data:application/zip;base64,<data>`):
 ```sh
 rbxasset-cli character --key <KEY>::<api/auth> --username <username>
 ```
-- Getting Character by UserId:
+- Getting Character by UserId (Base64 -> `data:application/zip;base64,<data>`):
 ```sh
 rbxasset-cli character --key <KEY>::<api/auth> --user-id <user_id>
 ```
-- Getting Item:
+- Getting Item (Base64 -> `data:application/zip;base64,<data>`):
 ```sh
 rbxasset-cli item --key <KEY>::<api/auth> --item-id <item_id>
 ```
-- Getting Bundle:
+- Getting Bundle (Base64 -> `data:application/zip;base64,<data>`):
 ```sh
 rbxasset-cli bundle --key <KEY>::<api/auth> --bundle-id <bundle_id>
 ```
-- Getting Rbxm File:
+- Getting Rbxm File (Base64 -> `data:binary/octet-stream;base64,<data>`):
 ```sh
 rbxasset-cli model --key <KEY>::<api/auth> --model-id <model_id>
 ```
-- Parse RbxAssetUrl to AssetType and the AssetId:
+- Parse RbxAssetUrl to AssetType and the AssetId (string -> `<mesh/image>/<asset_id>`):
 ```sh
 rbxasset-cli rbx-asset --key <KEY>::<api/auth> --asset-url rbxassetid://<asset_id>
 ```
-- Getting Image Asset:
+- Getting Image Asset (Base64 -> `data:image/png;base64,<data>`):
 ```sh
 rbxasset-cli image --key <KEY>::<api/auth> --image-id <asset_id>
 ```
-- Getting Mesh Asset:
+- Getting Mesh Asset (Base64 -> `data:text/plain;base64,<data>`):
 ```sh
 rbxasset-cli mesh --key <KEY>::<api/auth> --mesh-id <mesh_id>
 ```
