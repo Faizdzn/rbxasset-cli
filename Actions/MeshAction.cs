@@ -8,7 +8,7 @@ namespace Actions
         public static async Task Run(CommandBase.IKey ApiKey, long MeshId)
         {
             var ModelApi = new RobloxModelApi(ApiKey);
-            // Console.WriteLine(await ModelApi.GetMeshFile(MeshId));
+            Console.WriteLine(await ModelApi.GetMeshFile(MeshId));
         }
     }
 }

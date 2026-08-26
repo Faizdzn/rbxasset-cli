@@ -8,7 +8,7 @@ namespace Actions
         public static async Task Run(CommandBase.IKey ApiKey, long ModelId)
         {
             var ModelApi = new RobloxModelApi(ApiKey);
-            // Console.WriteLine(await ModelApi.GetRbxmFile(ModelId));
+            Console.WriteLine(await ModelApi.GetRbxmFile(ModelId));
         }
     }
 }

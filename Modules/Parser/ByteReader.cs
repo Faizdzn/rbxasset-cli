@@ -24,13 +24,6 @@ namespace Modules.Parser
         public int GetLength() => Span.Length;
         public void Jump(int n) => _index += n;
 
-        public ReadOnlySpan<byte> Array(int n)
-        {
-            var result = Span.Slice(_index, n);
-            _index += n;
-            return result;
-        }
-
         public bool Match(string match)
         {
             if (_index + match.Length > Span.Length) return false;
@@ -159,6 +152,28 @@ namespace Modules.Parser
             _index += n;
             return Encoding.UTF8.GetString(bytes);
         }
-    }
 
+        public int IndexOf(byte value, int startIndex) {
+            // System.Array.IndexOf(_buffer, value, startIndex)
+            int index = _buffer.Span[startIndex..].IndexOf(value);
+            return index == -1 ? -1 : startIndex + index;
+        }
+
+        public byte[] Array(int n)
+        {
+            byte[] result = new byte[n];
+            Span.Slice(_index, n).CopyTo(result);
+            _index += n;
+            return result;
+        }
+
+        public byte[] Subarray(int start, int end)
+        {
+            int length = end - start;
+            byte[] result = new byte[length];
+            _buffer.Span.Slice(start, length).CopyTo(result);
+
+            return result;
+        }
+    }
 }

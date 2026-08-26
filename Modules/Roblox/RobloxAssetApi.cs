@@ -59,6 +59,10 @@ namespace Modules.Roblox
             var Api = $"https://users.roblox.com/v1/users/{UserId}";
 
             var Resp = await Http.GetAsync(Api);
+            if(Resp.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception("User not found!");
+            }
             var JsonData = await Resp.Content.ReadFromJsonAsync<JsonObject>();
 
             var UserShot = await GetUserShot(UserId);
@@ -250,6 +254,10 @@ namespace Modules.Roblox
             var Api = $"https://catalog.roblox.com/v1/catalog/items/{ItemId}/details?itemType=Asset";
 
             var Resp = await Http.GetAsync(Api);
+            if(Resp.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception("Item not found!");
+            }
             var JsonData = await Resp.Content.ReadFromJsonAsync<JsonObject>();
 
             return JsonData!;
