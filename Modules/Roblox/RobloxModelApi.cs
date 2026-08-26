@@ -17,6 +17,11 @@ namespace Modules.Roblox {
         {
             var Api = $"https://apis.roblox.com/asset-delivery-api/v1/assetId/{AssetId}";
             var Resp = await Http.GetAsync(Api);
+            if(Resp.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception("Asset not found!");
+            }
+
             var JsonData = await Resp.Content.ReadFromJsonAsync<JsonObject>();
 
             return JsonData!;
@@ -92,7 +97,7 @@ namespace Modules.Roblox {
             public uint[] Lods { get; set; } = new uint[] {};
             public Bone[]? Bones { get; set; }
         }
-        public async Task<JsonObject> MeshParser(byte[] Buffer)
+        public JsonObject MeshParser(byte[] Buffer)
         {
             var assert = async(bool Logic, string Message) =>
             {
@@ -100,6 +105,8 @@ namespace Modules.Roblox {
                 {
                     throw new Exception(Message);
                 }
+
+                return await Task.Run(() => true);
             };
             var ParseText = (string String) =>
             {
@@ -148,7 +155,7 @@ namespace Modules.Roblox {
                     Normals,
                     Uvs,
                     Faces,
-                    Lods = new[] {0, FaceCount}
+                    Lods = new[] {0, FaceCount},
                 };
             };
             var ParseBin = (byte[] Buffer, string Version) =>
@@ -246,7 +253,6 @@ namespace Modules.Roblox {
                     + (nameTableSize)
                     + (subsetCount * 72)
                     + (facsDataSize);
-
                 assert(fileEnd == Reader.GetLength(), $"Invalid file size (expected {Reader.GetLength()}, got {fileEnd})");
 
                 uint[] faces = new uint[faceCount * 3];
@@ -555,25 +561,28 @@ namespace Modules.Roblox {
 
                                     foreach (var attribute in data.Attributes)
                                     {
+                                        var FloatArray = attribute.Output.Cast<object>().Select(sel => float.Parse(sel.ToString()!)).ToArray();
+                                        // var FloatArray = Array.ConvertAll(attribute.Output, sel => float.Parse(sel.ToString()));
+
                                         switch (attribute.UniqueId)
                                         {
                                             case 0:
                                                 // Position
                                                 mesh.Vertices =
-                                                    ToFloatArray((float[])attribute.Output!);
+                                                    ToFloatArray(FloatArray);
                                                 break;
 
                                             case 1:
                                                 // Normals
                                                 mesh.Normals =
-                                                    ToFloatArray((float[])attribute.Output!);
+                                                    ToFloatArray(FloatArray);
                                                 break;
 
                                             case 2:
                                             {
                                                 // UVs
                                                 mesh.Uvs =
-                                                    ToFloatArray((float[])attribute.Output!);
+                                                    ToFloatArray(FloatArray);
 
                                                 for (int i = 1;
                                                     i < mesh.Uvs.Length;
@@ -590,7 +599,7 @@ namespace Modules.Roblox {
                                             {
                                                 // Tangents
                                                 mesh.Tangents =
-                                                    ToFloatArray((float[])attribute.Output!);
+                                                    ToFloatArray(FloatArray);
 
                                                 for (int i = 0;
                                                     i < mesh.Tangents.Length;
@@ -607,12 +616,12 @@ namespace Modules.Roblox {
                                             case 4:
                                                 // Colors
                                                 mesh.VertexColors =
-                                                    ToByteArray((float[])attribute.Output!);
+                                                    ToByteArray(FloatArray);
                                                 break;
 
                                             default:
                                                 Console.WriteLine(
-                                                    $"[BTRoblox] Unknown draco attribute {attribute.UniqueId}"
+                                                    $"Unknown draco attribute {attribute.UniqueId}"
                                                 );
                                                 break;
                                         }
@@ -620,7 +629,7 @@ namespace Modules.Roblox {
 
                                     mesh.Faces = ToUIntArray(data.Faces);
 
-                                    if (mesh.Lods == null)
+                                    if (mesh.Lods.Length < 1)
                                     {
                                         mesh.Lods = new uint[]
                                         {
@@ -665,7 +674,7 @@ namespace Modules.Roblox {
 
                                     int numLods =
                                         checked((int)numLodsRaw);
-
+                                    
                                     if (numLods <= 2)
                                     {
                                         // LOD levels are ignored when there
@@ -673,6 +682,7 @@ namespace Modules.Roblox {
                                         chunk.Jump(
                                             checked(numLods * 4)
                                         );
+                                        
                                     }
                                     else
                                     {
@@ -1022,27 +1032,28 @@ namespace Modules.Roblox {
                 throw new Exception("Mesh cant be downloaded!");
             }
             var FtsFile = await LoadFtsDirect(ReqAsset["location"]!.GetValue<string>());
-            var Mesh = await MeshParser(FtsFile);
+            var Mesh = MeshParser(FtsFile);
 
             var lines = new List<string>();
 
-            lines.Append("o Mesh");
+            lines.Add("o Mesh");
             for(int i = 0, len = Mesh["Vertices"]!.AsArray().Count(); i < len; i += 3)
             {
-              lines.Append($"v {Mesh["Vertices"]![i]} {Mesh["Vertices"]![i + 1]} {Mesh["Vertices"]![i + 2]}");  
+                lines.Add($"v {Mesh["Vertices"]![i]} {Mesh["Vertices"]![i + 1]} {Mesh["Vertices"]![i + 2]}");  
             }
-            lines.Append("");
+            lines.Add("");
             for(int i = 0, len = Mesh["Normals"]!.AsArray().Count(); i < len; i += 3)
             {
-              lines.Append($"v {Mesh["Normals"]![i]} {Mesh["Normals"]![i + 1]} {Mesh["Normals"]![i + 2]}");  
+                lines.Add($"vn {Mesh["Normals"]![i]} {Mesh["Normals"]![i + 1]} {Mesh["Normals"]![i + 2]}");  
             }
-            lines.Append("");
-            for(int i = 0, len = Mesh["Uvs"]!.AsArray().Count(); i < len; i += 3)
+            lines.Add("");
+            for(int i = 0, len = Mesh["Uvs"]!.AsArray().Count(); i < len; i += 2)
             {
-              lines.Append($"v {Mesh["Uvs"]![i]} {Mesh["Uvs"]![i + 1]} {Mesh["Uvs"]![i + 2]}");  
+                lines.Add($"vt {Mesh["Uvs"]![i]} {Mesh["Uvs"]![i + 1]}");  
             }
-            lines.Append("");
+            lines.Add("");
 
+            // Console.WriteLine(Mesh);
             var LodsStart = Mesh["Lods"]![0]!.GetValue<int>() * 3;
             var LodsEnd = Mesh["Lods"]![1]!.GetValue<int>() * 3;
             var Faces = Mesh["Faces"]!.AsArray().ToArray()[LodsStart..LodsEnd];
@@ -1052,11 +1063,12 @@ namespace Modules.Roblox {
                 var A = Faces[i]!.GetValue<int>() + 1;
                 var B = Faces[i + 1]!.GetValue<int>() + 1;
                 var C = Faces[i + 2]!.GetValue<int>() + 1;
-                lines.Append($"f {A}/{A}/{A} {B}/{B}/{B} {C}/{C}/{C}");
+                lines.Add($"f {A}/{A}/{A} {B}/{B}/{B} {C}/{C}/{C}");
             }
 
-            var Buffer = Encoding.UTF8.GetBytes(string.Join("\n"));
-            return Convert.ToBase64String(Buffer);
+            var Buffer = Encoding.UTF8.GetBytes(string.Join("\n", lines));
+            var Base64File = Convert.ToBase64String(Buffer);
+            return $"data:text/plain;base64,{Base64File}";
         }
         public async Task<string> GetImageFile(long ImageId)
         {
@@ -1066,7 +1078,8 @@ namespace Modules.Roblox {
             }
             var FtsFile = await LoadFtsDirect(ReqAsset["location"]!.GetValue<string>());
 
-            return Convert.ToBase64String(FtsFile);
+            var Base64File = Convert.ToBase64String(FtsFile);
+            return $"data:image/png;base64,{Base64File}";
         }
 
         // parse rbxassetid://

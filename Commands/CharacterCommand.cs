@@ -37,7 +37,7 @@ namespace Commands
                     var UserId = act.GetValue(UserIdOption);
                     var Username = act.GetValue(UsernameOption);
 
-                    await CharacterAction.Run(await ParseKey(ApiKey ?? ""), UserId, Username!);                    
+                    await CharacterAction.Run(ParseKey(ApiKey ?? ""), UserId, Username!);                    
                 } catch(Exception e)
                 {
                     Console.Error.WriteLine(e.Message);

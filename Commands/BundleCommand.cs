@@ -31,7 +31,7 @@ namespace Commands
                     var ApiKey = act.GetValue(ApiKeyOption);
                     var BundleId = act.GetValue(BundleIdOption);
 
-                    await BundleAction.Run(await ParseKey(ApiKey ?? ""), BundleId);
+                    await BundleAction.Run(ParseKey(ApiKey ?? ""), BundleId);
                 } catch(Exception e)
                 {
                     Console.Error.WriteLine(e.Message);

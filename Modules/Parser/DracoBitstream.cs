@@ -58,10 +58,10 @@ namespace Modules.Parser
             parser.EncoderMethod = header.EncoderMethod;
             parser.Flags = header.Flags;
 
-            Console.WriteLine(
-                $"DRACO {parser.MajorVersion}.{parser.MinorVersion} | " +
-                $"encoderType: {parser.EncoderType}, " +
-                $"encoderMethod: {parser.EncoderMethod}, flags: {parser.Flags}");
+            // Console.WriteLine(
+            //     $"DRACO {parser.MajorVersion}.{parser.MinorVersion} | " +
+            //     $"encoderType: {parser.EncoderType}, " +
+            //     $"encoderMethod: {parser.EncoderMethod}, flags: {parser.Flags}");
 
             if (parser.EncoderType != TRIANGULAR_MESH)
                 throw new NotSupportedException("draco encoderType not implemented");
@@ -862,7 +862,7 @@ namespace Modules.Parser
         public int WrapMax { get; set; }
         public int OctaMaxQ { get; set; }
 
-        public Array? Output { get; set; }
+        public Array Output { get; set; } = null!;
     }
 
     public sealed class RansDecoder

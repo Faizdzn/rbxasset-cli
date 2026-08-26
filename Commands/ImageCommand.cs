@@ -31,7 +31,7 @@ namespace Commands
                     var ApiKey = act.GetValue(ApiKeyOption);
                     var ImageId = act.GetValue(ImageIdOption);
 
-                    await ImageAction.Run(await ParseKey(ApiKey ?? ""), ImageId);
+                    await ImageAction.Run(ParseKey(ApiKey ?? ""), ImageId);
                 } catch(Exception e)
                 {
                     Console.Error.WriteLine(e.Message);

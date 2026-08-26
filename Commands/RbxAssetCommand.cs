@@ -31,7 +31,7 @@ namespace Commands
                     var ApiKey = act.GetValue(ApiKeyOption);
                     var RbxAssetUrl = act.GetValue(RbxAssetUrlOption);
 
-                    await RbxAssetAction.Run(await ParseKey(ApiKey ?? ""), RbxAssetUrl ?? "");
+                    await RbxAssetAction.Run(ParseKey(ApiKey ?? ""), RbxAssetUrl ?? "");
                 } catch(Exception e)
                 {
                     Console.Error.WriteLine(e.Message);

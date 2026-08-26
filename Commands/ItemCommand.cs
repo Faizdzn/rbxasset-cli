@@ -31,7 +31,7 @@ namespace Commands
                     var ApiKey = act.GetValue(ApiKeyOption);
                     var ItemId = act.GetValue(ItemIdOption);
 
-                    await ItemAction.Run(await ParseKey(ApiKey ?? ""), ItemId);
+                    await ItemAction.Run(ParseKey(ApiKey ?? ""), ItemId);
                 } catch(Exception e)
                 {
                     Console.Error.WriteLine(e.Message);

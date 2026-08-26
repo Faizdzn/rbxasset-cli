@@ -31,10 +31,11 @@ namespace Commands
                     var ApiKey = act.GetValue(ApiKeyOption);
                     var MeshId = act.GetValue(MeshIdOption);
 
-                    await MeshAction.Run(await ParseKey(ApiKey ?? ""), MeshId);
+                    await MeshAction.Run(ParseKey(ApiKey ?? ""), MeshId);
                 } catch(Exception e)
                 {
-                    Console.Error.WriteLine(e.Message);
+                    Console.WriteLine(e.Message);
+                    Console.Error.WriteLine(e.StackTrace);
                 }
             });
 

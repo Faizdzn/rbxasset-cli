@@ -21,7 +21,7 @@ namespace Commands
             public string KeyValue {get; set;} = null!;
             public KeyTypeEnum KeyType {get; set;}
         }
-        public async Task<IKey> ParseKey(string Key)
+        public IKey ParseKey(string Key)
         {
             var KeySplit = Key.Split("::");
             if(KeySplit.Length < 2)
