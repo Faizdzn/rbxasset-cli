@@ -2,6 +2,10 @@
 RbxAsset CLI is an open-source command-line tool for downloading and working with Roblox assets. Built with developers and creators in mind, RbxAsset CLI provides a simple and efficient way to fetch Roblox assets directly from the command line, making it useful for asset pipelines, automation, tooling, and development workflows.
 
 ## Example Usage
+- Help:
+```sh
+rbxasset-cli help
+```
 - Getting Character by Username:
 ```sh
 rbxasset-cli character --key <KEY>::<api/auth> --username <username>
