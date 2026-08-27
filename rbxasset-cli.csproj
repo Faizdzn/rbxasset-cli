@@ -3,11 +3,14 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <PublishSingleFile>true</PublishSingleFile>
     <RootNamespace>rbxasset_cli</RootNamespace>
+    <Version>0.0.1</Version>
+
+    <PublishSingleFile>true</PublishSingleFile>
+    <GCHeapHardLimitPercent>50</GCHeapHardLimitPercent>
+
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>0.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
