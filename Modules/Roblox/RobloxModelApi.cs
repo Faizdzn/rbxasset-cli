@@ -1090,7 +1090,7 @@ namespace Modules.Roblox {
             }
             
             var slicesId = Url.Split("rbxassetid://");
-            var assetType = (await RequestAssetApi(int.Parse(slicesId[1])))["assetTypeId"]!.GetValue<int>();
+            var assetType = (await RequestAssetApi(long.Parse(slicesId[1])))["assetTypeId"]!.GetValue<int>();
             return assetType == 4 ? $"mesh/{slicesId[1]}" : (assetType == 1 ? $"image/{slicesId[1]}" : "");
         }
     }
