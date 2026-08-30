@@ -108,7 +108,6 @@ namespace Modules.Roblox {
 
                 return await Task.Run(() => true);
             };
-            await assert(true, "cool");
             var ParseText = async(string String) =>
             {
                 var Lines = Regex.Split(String, @"/\r?\n/");
@@ -436,22 +435,15 @@ namespace Modules.Roblox {
 
                 return mesh;
             };
-            var ParseChunk = (byte[] Buffer, string Version) =>
+            var ParseChunk = async(byte[] Buffer, string Version) =>
             {
                 var Reader = new ByteReader(Buffer);
 
                 string header = Reader.String(12);
-
-                if (header != $"version {Version}")
-                    throw new Exception("Bad header");
+                await assert(header != $"version {Version}", "Bad header");
 
                 byte newline = Reader.UInt8();
-
-                if (newline != 0x0A &&
-                    !(newline == 0x0D && Reader.UInt8() == 0x0A))
-                {
-                    throw new Exception("Bad newline");
-                }
+                await assert(newline != 0x0A && !(newline == 0x0D && Reader.UInt8() == 0x0A), "Bad newline");
 
                 var mesh = new MeshData();
 
@@ -1005,7 +997,7 @@ namespace Modules.Roblox {
                         return JsonSerializer.SerializeToNode(await ParseBin(Buffer, Version));
                     case "6.00":
                     case "7.00":
-                        return JsonSerializer.SerializeToNode(ParseChunk(Buffer, Version));
+                        return JsonSerializer.SerializeToNode(await ParseChunk(Buffer, Version));
                     default:
                         throw new Exception($"Unsupported mesh version {Version}");  
                 }
