@@ -97,7 +97,7 @@ namespace Modules.Roblox {
             public uint[] Lods { get; set; } = new uint[] {};
             public Bone[]? Bones { get; set; }
         }
-        public JsonObject MeshParser(byte[] Buffer)
+        public async Task<JsonObject> MeshParser(byte[] Buffer)
         {
             var assert = async(bool Logic, string Message) =>
             {
@@ -108,10 +108,11 @@ namespace Modules.Roblox {
 
                 return await Task.Run(() => true);
             };
-            var ParseText = (string String) =>
+            await assert(true, "cool");
+            var ParseText = async(string String) =>
             {
                 var Lines = Regex.Split(String, @"/\r?\n/");
-                assert(Lines.Length == 3, "Invalid mesh version 1 file (Wrong amount of lines)");
+                await assert(Lines.Length == 3, "Invalid mesh version 1 file (Wrong amount of lines)");
 
                 var Version = Lines[0];
                 var FaceCount = long.Parse(Lines[1] ?? "0");
@@ -120,7 +121,7 @@ namespace Modules.Roblox {
                 var RegexVector = new Regex(@"/\s+/g");
                 var VectorsNotSliced = RegexVector.Replace(Data, "");
                 var Vectors = VectorsNotSliced[1..^1].Split("]["); // .slice(1, -1)
-                assert(Vectors.Length == FaceCount * 9, "Length Mismatch");
+                await assert(Vectors.Length == FaceCount * 9, "Length Mismatch");
 
                 var ScaleMultiplier = Version == "version 1.00" ? 0.5 : 1;
                 var VertexCount = FaceCount * 3;
@@ -158,13 +159,13 @@ namespace Modules.Roblox {
                     Lods = new[] {0, FaceCount},
                 };
             };
-            var ParseBin = (byte[] Buffer, string Version) =>
+            var ParseBin = async(byte[] Buffer, string Version) =>
             {
                 var Reader = new ByteReader(Buffer);
-                assert(Reader.String(12) == $"version {Version}", "Bad header");
+                await assert(Reader.String(12) == $"version {Version}", "Bad header");
 
                 byte newline = Reader.UInt8();
-                assert(newline == 0x0A || (newline == 0x0D && Reader.UInt8() == 0x0A), "Bad newline");
+                await assert(newline == 0x0A || (newline == 0x0D && Reader.UInt8() == 0x0A), "Bad newline");
 
                 int begin = Reader.GetIndex();
 
@@ -184,7 +185,7 @@ namespace Modules.Roblox {
                 if (Version == "2.00")
                 {
                     headerSize = Reader.UInt16LE();
-                    assert(headerSize >= 12, $"Invalid header size {headerSize}");
+                    await assert(headerSize >= 12, $"Invalid header size {headerSize}");
 
                     vertexSize = Reader.UInt8();
                     faceSize = Reader.UInt8();
@@ -194,7 +195,7 @@ namespace Modules.Roblox {
                 else if (Version.StartsWith("3."))
                 {
                     headerSize = Reader.UInt16LE();
-                    assert(headerSize >= 16, $"Invalid header size {headerSize}");
+                    await assert(headerSize >= 16, $"Invalid header size {headerSize}");
 
                     vertexSize = Reader.UInt8();
                     faceSize = Reader.UInt8();
@@ -206,7 +207,7 @@ namespace Modules.Roblox {
                 else if (Version.StartsWith("4."))
                 {
                     headerSize = Reader.UInt16LE();
-                    assert(headerSize >= 24, $"Invalid header size {headerSize}");
+                    await assert(headerSize >= 24, $"Invalid header size {headerSize}");
 
                     Reader.Jump(2); // uint16 lodType;
                     vertexCount = (int)Reader.UInt32LE();
@@ -222,7 +223,7 @@ namespace Modules.Roblox {
                 else if (Version.StartsWith("5."))
                 {
                     headerSize = Reader.UInt16LE();
-                    assert(headerSize >= 32, $"Invalid header size {headerSize}");
+                    await assert(headerSize >= 32, $"Invalid header size {headerSize}");
 
                     Reader.Jump(2); // uint16 meshCount;
                     vertexCount = (int)Reader.UInt32LE();
@@ -240,9 +241,9 @@ namespace Modules.Roblox {
 
                 Reader.SetIndex(begin + headerSize);
 
-                assert(vertexSize >= 36, $"Invalid vertex size {vertexSize}");
-                assert(faceSize >= 12, $"Invalid face size {faceSize}");
-                assert(lodSize >= 4, $"Invalid lod size {lodSize}");
+                await assert(vertexSize >= 36, $"Invalid vertex size {vertexSize}");
+                await assert(faceSize >= 12, $"Invalid face size {faceSize}");
+                await assert(lodSize >= 4, $"Invalid lod size {lodSize}");
 
                 int fileEnd = Reader.GetIndex()
                     + (vertexCount * vertexSize)
@@ -253,7 +254,7 @@ namespace Modules.Roblox {
                     + (nameTableSize)
                     + (subsetCount * 72)
                     + (facsDataSize);
-                assert(fileEnd == Reader.GetLength(), $"Invalid file size (expected {Reader.GetLength()}, got {fileEnd})");
+                await assert(fileEnd == Reader.GetLength(), $"Invalid file size (expected {Reader.GetLength()}, got {fileEnd})");
 
                 uint[] faces = new uint[faceCount * 3];
                 float[] vertices = new float[vertexCount * 3];
@@ -984,24 +985,24 @@ namespace Modules.Roblox {
 
                 return mesh;
             };
-            var Parse = (byte[] Buffer) =>
+            var Parse = async(byte[] Buffer) =>
             {
                 var Reader = new ByteReader(Buffer);
-                assert(Reader.String(8) == "version ", "Invalid Mesh File");
+                await assert(Reader.String(8) == "version ", "Invalid Mesh File");
 
                 var Version = Reader.String(4);
                 switch(Version)
                 {
                     case "1.00":
                     case "1.01":
-                        return JsonSerializer.SerializeToNode(ParseText(Encoding.UTF8.GetString(Buffer)));
+                        return JsonSerializer.SerializeToNode(await ParseText(Encoding.UTF8.GetString(Buffer)));
                     case "2.00":
                     case "3.00":
                     case "3.01":
                     case "4.00":
                     case "4.01":
                     case "5.00":
-                        return JsonSerializer.SerializeToNode(ParseBin(Buffer, Version));
+                        return JsonSerializer.SerializeToNode(await ParseBin(Buffer, Version));
                     case "6.00":
                     case "7.00":
                         return JsonSerializer.SerializeToNode(ParseChunk(Buffer, Version));
@@ -1010,7 +1011,7 @@ namespace Modules.Roblox {
                 }
             };
 
-            return Parse(Buffer).AsObject();
+            return (await Parse(Buffer)).AsObject();
         }
 
         // rbxm
@@ -1032,7 +1033,7 @@ namespace Modules.Roblox {
                 throw new Exception("Mesh cant be downloaded!");
             }
             var FtsFile = await LoadFtsDirect(ReqAsset["location"]!.GetValue<string>());
-            var Mesh = MeshParser(FtsFile);
+            var Mesh = await MeshParser(FtsFile);
 
             var lines = new List<string>();
 
