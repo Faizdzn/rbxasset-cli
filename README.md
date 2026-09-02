@@ -1,28 +1,27 @@
 # Roblox Asset Downloader
-RbxAsset CLI is an open-source command-line tool for downloading and working with Roblox assets. Built with developers and creators in mind, RbxAsset CLI provides a simple and efficient way to fetch Roblox assets directly from the command line, making it useful for asset pipelines, automation, tooling, and development workflows.
-
+RbxAsset CLI is an open-source command-line tool for downloading and working with Roblox assets. Built with developers and creators in mind, RbxAsset CLI provides a simple and efficient way to fetch Roblox assets directly from the command line, making it useful for character downloader or maybe asset downloader like mesh or rbxm.
 ## Example Usage
 - Help:
 ```sh
 rbxasset-cli --help
 ```
-- Getting Character by Username (Base64 -> `data:application/zip;base64,<data>`):
+- Getting Character by Username .zip (Base64 -> `data:application/zip;base64,<data>`):
 ```sh
 rbxasset-cli character --key <KEY>::<api/auth> --username <username>
 ```
-- Getting Character by UserId (Base64 -> `data:application/zip;base64,<data>`):
+- Getting Character by UserId .zip (Base64 -> `data:application/zip;base64,<data>`):
 ```sh
 rbxasset-cli character --key <KEY>::<api/auth> --user-id <user_id>
 ```
-- Getting Item (Base64 -> `data:application/zip;base64,<data>`):
+- Getting Item .zip (Base64 -> `data:application/zip;base64,<data>`):
 ```sh
 rbxasset-cli item --key <KEY>::<api/auth> --item-id <item_id>
 ```
-- Getting Bundle (Base64 -> `data:application/zip;base64,<data>`):
+- Getting Bundle .zip (Base64 -> `data:application/zip;base64,<data>`):
 ```sh
 rbxasset-cli bundle --key <KEY>::<api/auth> --bundle-id <bundle_id>
 ```
-- Getting Rbxm File (Base64 -> `data:binary/octet-stream;base64,<data>`):
+- Getting Rbxm File .rbxm (Base64 -> `data:binary/octet-stream;base64,<data>`):
 ```sh
 rbxasset-cli model --key <KEY>::<api/auth> --model-id <model_id>
 ```
@@ -30,11 +29,11 @@ rbxasset-cli model --key <KEY>::<api/auth> --model-id <model_id>
 ```sh
 rbxasset-cli rbx-asset --key <KEY>::<api/auth> --asset-url rbxassetid://<asset_id>
 ```
-- Getting Image Asset (Base64 -> `data:image/png;base64,<data>`):
+- Getting Image Asset .png (Base64 -> `data:image/png;base64,<data>`):
 ```sh
 rbxasset-cli image --key <KEY>::<api/auth> --image-id <asset_id>
 ```
-- Getting Mesh Asset (Base64 -> `data:text/plain;base64,<data>`):
+- Getting Mesh Asset .obj (Base64 -> `data:text/plain;base64,<data>`):
 ```sh
 rbxasset-cli mesh --key <KEY>::<api/auth> --mesh-id <mesh_id>
 ```
